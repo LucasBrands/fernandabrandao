@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Meu Portfólio</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Dados de autenticação da API do Instagram
+      var accessToken = 'SEU_TOKEN_DE_ACESSO';
+      var userId = 'SEU_ID_DO_USUÁRIO';
+
+      // URL da API para obter as publicações do Instagram
+      var apiUrl = 'https://graph.instagram.com/' + userId + '/media?fields=id,caption,media_url,permalink&access_token=' + accessToken;
+
+      // Faz uma solicitação GET para a API do Instagram
+      $.get(apiUrl, function(response) {
+        // Processa a resposta da API e exibe as publicações
+        if (response.data && response.data.length > 0) {
+          for (var i = 0; i < response.data.length; i++) {
+            var post = response.data[i];
+
+            // Cria um elemento HTML para exibir a publicação
+            var postElement = document.createElement('div');
+            postElement.className = 'post';
+
+            // Adiciona a imagem da publicação
+            var imageElement = document.createElement('img');
+            imageElement.src = post.media_url;
+            postElement.appendChild(imageElement);
+
+            // Adiciona a legenda da publicação
+            var captionElement = document.createElement('p');
+            captionElement.innerHTML = post.caption;
+            postElement.appendChild(captionElement);
+
+            // Adiciona o link para a publicação completa no Instagram
+            var linkElement = document.createElement('a');
+            linkElement.href = post.permalink;
+            linkElement.innerHTML = 'Ver no Instagram';
+            postElement.appendChild(linkElement);
+
+            // Adiciona a publicação à página
+            document.getElementById('posts-container').appendChild(postElement);
+          }
+        } else {
+          // Caso não haja publicações disponíveis
+          document.getElementById('posts-container').innerHTML = 'Nenhuma publicação encontrada.';
+        }
+      });
+    });
+  </script>
+  <style>
+    .post {
+      margin-bottom: 20px;
+    }
+    .post img {
+      width: 300px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Meu Portfólio</h1>
+
+  <div id="posts-container"></div>
+</body>
+</html>
